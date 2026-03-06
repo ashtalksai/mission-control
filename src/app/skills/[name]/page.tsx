@@ -25,14 +25,14 @@ export default function SkillDetailPage({
 
   if (!skill) {
     return (
-      <div className="flex items-center justify-center h-full">
+      <div className="flex items-center justify-center lg:h-full py-20">
         <p className="text-sm text-muted-foreground">Loading skill...</p>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col lg:h-full">
       <div className="h-12 border-b border-border bg-card flex items-center px-4 gap-3">
         <Link
           href="/skills"
@@ -66,7 +66,7 @@ export default function SkillDetailPage({
             <h3 className="text-xs uppercase tracking-wider text-muted-foreground mb-3 font-medium">
               Skill Content
             </h3>
-            <div className="prose prose-invert prose-sm max-w-none max-h-[700px] overflow-auto rounded-md bg-muted/30 p-4 border border-border">
+            <div className="prose prose-sm dark:prose-invert max-w-none max-h-[700px] overflow-auto rounded-md bg-muted/30 p-4 border border-border">
               <Markdown remarkPlugins={[remarkGfm]}>{skill.content}</Markdown>
             </div>
           </CardContent>

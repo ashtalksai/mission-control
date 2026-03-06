@@ -32,10 +32,10 @@ interface ProjectDetail {
 }
 
 const FRAMEWORK_COLORS: Record<string, string> = {
-  nextjs: "bg-white/10 text-white border-white/20",
-  react: "bg-cyan-500/15 text-cyan-400 border-cyan-500/20",
-  node: "bg-emerald-500/15 text-emerald-400 border-emerald-500/20",
-  unknown: "bg-zinc-500/15 text-zinc-400 border-zinc-500/20",
+  nextjs: "bg-foreground/10 text-foreground border-foreground/20",
+  react: "bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 border-cyan-500/20",
+  node: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
+  unknown: "bg-muted text-muted-foreground border-border",
 };
 
 function timeAgo(isoDate: string): string {
@@ -75,7 +75,7 @@ export default function ProjectDetailPage({
 
   if (!project) {
     return (
-      <div className="flex items-center justify-center h-full">
+      <div className="flex items-center justify-center lg:h-full py-20">
         <p className="text-sm text-muted-foreground">Loading project...</p>
       </div>
     );
@@ -85,7 +85,7 @@ export default function ProjectDetailPage({
   const devDepCount = Object.keys(project.devDependencies).length;
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col lg:h-full">
       <div className="h-12 border-b border-border bg-card flex items-center px-4 gap-3">
         <Link
           href="/projects"
@@ -136,7 +136,7 @@ export default function ProjectDetailPage({
                   href={project.deployUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs text-emerald-400 hover:text-emerald-300 underline underline-offset-2"
+                  className="text-xs text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 dark:hover:text-emerald-300 underline underline-offset-2"
                 >
                   {project.deployUrl}
                 </a>
@@ -146,7 +146,7 @@ export default function ProjectDetailPage({
                   href={project.gitRemote.replace("git@github.com:", "https://github.com/").replace(/\.git$/, "")}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs text-blue-400 hover:text-blue-300 underline underline-offset-2"
+                  className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 underline underline-offset-2"
                 >
                   GitHub
                 </a>
@@ -155,7 +155,7 @@ export default function ProjectDetailPage({
           </CardContent>
         </Card>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Pages / Routes */}
           <Section title="Pages" count={project.pages.length}>
             {project.pages.length > 0 ? (
@@ -184,7 +184,7 @@ export default function ProjectDetailPage({
                     key={key}
                     className="flex items-start gap-2 px-2 py-1.5 rounded bg-muted/30 text-xs"
                   >
-                    <span className="font-mono text-emerald-400 shrink-0">{key}</span>
+                    <span className="font-mono text-emerald-600 dark:text-emerald-400 shrink-0">{key}</span>
                     <span className="text-muted-foreground font-mono truncate">{val}</span>
                   </div>
                 ))}
@@ -195,7 +195,7 @@ export default function ProjectDetailPage({
           </Section>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Dependencies */}
           <Section title="Dependencies" count={depCount}>
             {depCount > 0 ? (
@@ -239,13 +239,13 @@ export default function ProjectDetailPage({
 
         {/* File Structure */}
         <Section title="Project Structure">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <h4 className="text-xs text-muted-foreground mb-2 uppercase tracking-wider">Directories</h4>
               <div className="space-y-0.5">
                 {project.topLevelDirs.map((dir) => (
                   <div key={dir} className="flex items-center gap-1.5 text-xs text-foreground">
-                    <svg className="w-3.5 h-3.5 text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
                     </svg>
                     {dir}
@@ -258,7 +258,7 @@ export default function ProjectDetailPage({
               <div className="space-y-0.5">
                 {project.topLevelFiles.map((file) => (
                   <div key={file} className="flex items-center gap-1.5 text-xs text-muted-foreground font-mono">
-                    <svg className="w-3.5 h-3.5 text-zinc-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-3.5 h-3.5 text-muted-foreground shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                     {file}

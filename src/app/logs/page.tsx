@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { usePolling } from "@/hooks/use-polling";
 import { POLLING_INTERVALS } from "@/lib/constants-client";
@@ -47,38 +48,40 @@ export default function LogsPage() {
     : entries;
 
   return (
-    <div className="h-full p-3 grid grid-rows-[auto_1fr] gap-3">
+    <div className="p-3 lg:h-full lg:grid lg:grid-rows-[auto_1fr] gap-3 space-y-3 lg:space-y-0">
       {/* Filter bar */}
-      <div className="rounded-lg border border-border bg-card px-4 py-2.5 flex items-center gap-4">
-        <span className="text-sm font-medium text-foreground">Logs</span>
-        <span className="text-xs text-muted-foreground">{filtered.length} entries</span>
-        <div className="flex gap-1 ml-2">
-          {(["all", "cron", "gateway"] as const).map((s) => (
-            <button
-              key={s}
-              onClick={() => setSource(s)}
-              className={cn(
-                "text-xs px-2 py-1 rounded-md transition-colors",
-                source === s ? "bg-accent text-accent-foreground font-medium" : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              {s === "all" ? "All" : s === "cron" ? "Cron" : "Gateway"}
-            </button>
-          ))}
-        </div>
-        <input
-          type="text"
-          placeholder="Search..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="ml-auto h-7 w-48 rounded-md border border-border bg-muted/50 px-2.5 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
-        />
-      </div>
+      <Card className="py-0">
+        <CardContent className="px-4 py-2.5 flex items-center gap-4 flex-wrap">
+          <span className="text-sm font-medium text-foreground">Logs</span>
+          <span className="text-xs text-muted-foreground">{filtered.length} entries</span>
+          <div className="flex gap-1 ml-2">
+            {(["all", "cron", "gateway"] as const).map((s) => (
+              <button
+                key={s}
+                onClick={() => setSource(s)}
+                className={cn(
+                  "text-xs px-2 py-1 rounded-md transition-colors",
+                  source === s ? "bg-accent text-accent-foreground font-medium" : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                {s === "all" ? "All" : s === "cron" ? "Cron" : "Gateway"}
+              </button>
+            ))}
+          </div>
+          <input
+            type="text"
+            placeholder="Search..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="ml-auto h-7 w-48 rounded-md border border-border bg-muted/50 px-2.5 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+          />
+        </CardContent>
+      </Card>
 
-      {/* Log list — internal scroll */}
-      <div className="rounded-lg border border-border bg-card overflow-hidden flex flex-col">
-        {/* Sticky column headers */}
-        <div className="bg-card border-b border-border/60 px-3 py-1.5 flex items-center gap-3 text-xs uppercase tracking-wider text-muted-foreground font-medium shrink-0">
+      {/* Log list */}
+      <Card className="overflow-hidden flex flex-col py-0">
+        {/* Sticky column headers — hidden on mobile */}
+        <div className="hidden md:flex bg-card border-b border-border/60 px-3 py-1.5 items-center gap-3 text-xs uppercase tracking-wider text-muted-foreground font-medium shrink-0">
           <span className="w-28 shrink-0">Time</span>
           <span className="w-14 shrink-0">Source</span>
           <span className="w-12 shrink-0">Status</span>
@@ -94,12 +97,12 @@ export default function LogsPage() {
               const run = entry.data;
               const isOk = run.status === "ok";
               return (
-                <button key={key} onClick={() => setExpanded(isExp ? null : key)} className="w-full text-left px-3 py-1.5 hover:bg-muted/10 flex items-start gap-3">
+                <button key={key} onClick={() => setExpanded(isExp ? null : key)} className="w-full text-left px-3 py-1.5 hover:bg-muted/50 flex flex-col md:flex-row md:items-start gap-1 md:gap-3">
                   <span className="w-28 shrink-0 text-xs text-muted-foreground font-mono tabular-nums">{formatTs(run.ts)}</span>
-                  <span className="w-14 shrink-0"><Badge variant="outline" className="text-xs px-1 py-0 h-3 border-blue-500/20 text-blue-400">cron</Badge></span>
+                  <span className="w-14 shrink-0"><Badge variant="outline" className="text-xs px-1 py-0 h-3 border-blue-500/20 text-blue-600 dark:text-blue-400">cron</Badge></span>
                   <span className="w-12 shrink-0 flex items-center gap-1">
                     <div className={cn("w-1.5 h-1.5 rounded-full", isOk ? "bg-emerald-500" : "bg-red-500")} />
-                    <span className={cn("text-xs", isOk ? "text-emerald-400" : "text-red-400")}>{run.status}</span>
+                    <span className={cn("text-xs", isOk ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400")}>{run.status}</span>
                   </span>
                   <span className="flex-1 min-w-0">
                     <span className="text-sm text-foreground">{run.jobName}</span>
@@ -111,15 +114,15 @@ export default function LogsPage() {
             } else {
               const log = entry.data;
               return (
-                <button key={key} onClick={() => setExpanded(isExp ? null : key)} className="w-full text-left px-3 py-1.5 hover:bg-muted/10 flex items-start gap-3">
+                <button key={key} onClick={() => setExpanded(isExp ? null : key)} className="w-full text-left px-3 py-1.5 hover:bg-muted/50 flex flex-col md:flex-row md:items-start gap-1 md:gap-3">
                   <span className="w-28 shrink-0 text-xs text-muted-foreground font-mono tabular-nums">{formatTs(log.timestamp)}</span>
                   <span className="w-14 shrink-0">
-                    <Badge variant="outline" className={cn("text-xs px-1 py-0 h-3", log.level === "error" ? "border-red-500/20 text-red-400" : log.level === "warn" ? "border-amber-500/20 text-amber-400" : "border-zinc-500/20 text-zinc-400")}>
+                    <Badge variant="outline" className={cn("text-xs px-1 py-0 h-3", log.level === "error" ? "border-red-500/20 text-red-600 dark:text-red-400" : log.level === "warn" ? "border-amber-500/20 text-amber-600 dark:text-amber-400" : "border-border text-muted-foreground")}>
                       {log.source}
                     </Badge>
                   </span>
                   <span className="w-12 shrink-0 flex items-center gap-1">
-                    <div className={cn("w-1.5 h-1.5 rounded-full", log.level === "error" ? "bg-red-500" : log.level === "warn" ? "bg-amber-500" : "bg-zinc-500")} />
+                    <div className={cn("w-1.5 h-1.5 rounded-full", log.level === "error" ? "bg-red-500" : log.level === "warn" ? "bg-amber-500" : "bg-muted-foreground/50")} />
                     <span className="text-xs text-muted-foreground">{log.level}</span>
                   </span>
                   <span className="flex-1 min-w-0">
@@ -141,7 +144,7 @@ export default function LogsPage() {
             <p className="text-xs text-muted-foreground text-center py-8">Loading...</p>
           )}
         </div>
-      </div>
+      </Card>
     </div>
   );
 }

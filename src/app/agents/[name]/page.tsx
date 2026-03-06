@@ -12,9 +12,9 @@ import { cn } from "@/lib/utils";
 import type { AgentProfile, AgentStatusResponse } from "@/lib/types";
 
 const MODEL_COLORS: Record<string, string> = {
-  "Opus 4.6": "bg-violet-500/15 text-violet-400 border-violet-500/20",
-  "Sonnet 4.6": "bg-blue-500/15 text-blue-400 border-blue-500/20",
-  "Haiku 4.5": "bg-emerald-500/15 text-emerald-400 border-emerald-500/20",
+  "Opus 4.6": "bg-violet-500/15 text-primary border-violet-500/20",
+  "Sonnet 4.6": "bg-blue-500/15 text-blue-600 dark:text-blue-400 border-blue-500/20",
+  "Haiku 4.5": "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
 };
 
 const PIPELINE_STAGES = [
@@ -98,14 +98,14 @@ export default function AgentDetailPage({
 
   if (!profile) {
     return (
-      <div className="flex items-center justify-center h-full">
+      <div className="flex items-center justify-center lg:h-full py-20">
         <p className="text-sm text-muted-foreground">Loading agent profile...</p>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col lg:h-full">
       <div className="h-12 border-b border-border bg-card flex items-center px-4 gap-3">
         <Link
           href="/agents"
@@ -127,7 +127,7 @@ export default function AgentDetailPage({
                     "w-3 h-3 rounded-full",
                     agentStatus?.status === "active"
                       ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"
-                      : "bg-zinc-600"
+                      : "bg-muted-foreground/40"
                   )}
                 />
                 <div>
@@ -139,14 +139,14 @@ export default function AgentDetailPage({
                 variant="outline"
                 className={cn(
                   "text-xs px-2 py-0.5 border",
-                  MODEL_COLORS[profile.model] ?? "bg-zinc-500/15 text-zinc-400 border-zinc-500/20"
+                  MODEL_COLORS[profile.model] ?? "bg-muted text-muted-foreground border-border"
                 )}
               >
                 {profile.model}
               </Badge>
             </div>
             <p className="text-sm text-muted-foreground">{profile.role}</p>
-            <div className="mt-3 flex items-center gap-4 text-xs text-muted-foreground">
+            <div className="mt-3 flex items-center gap-4 text-xs text-muted-foreground flex-wrap">
               <span>Sessions: {agentStatus?.sessionCount ?? 0}</span>
               <span>Instructions: {profile.lineCount} lines</span>
               <span className="font-mono text-xs">{profile.instructionsPath}</span>
@@ -154,7 +154,7 @@ export default function AgentDetailPage({
           </CardContent>
         </Card>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Pipeline Stages */}
           <Card>
             <CardContent className="p-5">
@@ -170,7 +170,7 @@ export default function AgentDetailPage({
                       className={cn(
                         "flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs border transition-colors",
                         owned
-                          ? "bg-blue-500/10 border-blue-500/30 text-blue-400"
+                          ? "bg-blue-500/10 border-blue-500/30 text-blue-600 dark:text-blue-400"
                           : "bg-muted/30 border-border text-muted-foreground/50"
                       )}
                     >
@@ -209,7 +209,7 @@ export default function AgentDetailPage({
           </Card>
         </div>
 
-        {/* Instructions — Section Browser */}
+        {/* Instructions -- Section Browser */}
         <Card>
           <CardContent className="p-5">
             <div className="flex items-center justify-between mb-4">
@@ -225,7 +225,7 @@ export default function AgentDetailPage({
             </div>
 
             {showFull ? (
-              <div className="prose prose-invert prose-sm max-w-none max-h-[600px] overflow-auto rounded-md bg-muted/30 p-4 border border-border">
+              <div className="prose prose-sm dark:prose-invert max-w-none max-h-[600px] overflow-auto rounded-md bg-muted/30 p-4 border border-border">
                 <Markdown remarkPlugins={[remarkGfm]}>{profile.instructions}</Markdown>
               </div>
             ) : (
@@ -258,7 +258,7 @@ export default function AgentDetailPage({
                       </span>
                     </button>
                     {activeSection === i && (
-                      <div className="prose prose-invert prose-sm max-w-none rounded-md bg-muted/30 p-4 border border-border mx-3 mb-2 mt-1 max-h-[400px] overflow-auto">
+                      <div className="prose prose-sm dark:prose-invert max-w-none rounded-md bg-muted/30 p-4 border border-border mx-3 mb-2 mt-1 max-h-[400px] overflow-auto">
                         <Markdown remarkPlugins={[remarkGfm]}>{sec.content}</Markdown>
                       </div>
                     )}

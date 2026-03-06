@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { usePolling } from "@/hooks/use-polling";
 import { POLLING_INTERVALS } from "@/lib/constants-client";
 import { cn } from "@/lib/utils";
@@ -15,10 +16,10 @@ import type {
 } from "@/lib/types";
 
 const MODEL_COLORS: Record<string, string> = {
-  opus: "text-violet-400",
-  sonnet: "text-blue-400",
-  haiku: "text-emerald-400",
-  codex: "text-amber-400",
+  opus: "text-primary",
+  sonnet: "text-blue-600 dark:text-blue-400",
+  haiku: "text-emerald-600 dark:text-emerald-400",
+  codex: "text-amber-600 dark:text-amber-400",
 };
 
 function timeAgo(iso: string | null): string {
@@ -73,25 +74,25 @@ function Cell({
   headerRight?: React.ReactNode;
 }) {
   const inner = (
-    <div
+    <Card
       className={cn(
-        "rounded-lg border border-border bg-card overflow-hidden flex flex-col h-full",
+        "overflow-hidden flex flex-col h-full gap-0 rounded-lg py-0",
         href && "hover:border-foreground/20 transition-colors cursor-pointer",
         className
       )}
     >
       {title && (
-        <div className="px-3 py-2.5 border-b border-border/60 shrink-0 flex items-center justify-between">
-          <h3 className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
+        <CardHeader className="px-3 py-2.5 border-b border-border/60 shrink-0 flex items-center justify-between gap-0">
+          <CardTitle className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
             {title}
-          </h3>
+          </CardTitle>
           {headerRight}
-        </div>
+        </CardHeader>
       )}
-      <div className="flex-1 min-h-0 overflow-y-auto scrollbar-thin">
+      <CardContent className="flex-1 min-h-0 overflow-y-auto scrollbar-thin px-0">
         {children}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
   if (href) return <Link href={href} className="contents">{inner}</Link>;
   return inner;
@@ -125,16 +126,29 @@ export default function DashboardPage() {
   const allHealthy = healthData?.every((c) => c.status === "healthy");
 
   return (
-    <div className="h-full p-3 grid grid-cols-4 grid-rows-[auto_1fr_1fr] gap-3">
+    <div
+      className={cn(
+        "p-3 grid gap-3",
+        "grid-cols-1",
+        "md:grid-cols-2",
+        "lg:grid-cols-4 lg:grid-rows-[auto_1fr_1fr] lg:h-full"
+      )}
+    >
       {/* Row 1: Status bar */}
-      <div className="col-span-4 rounded-lg border border-border bg-card px-4 py-2.5 flex items-center gap-4">
+      <Card
+        className={cn(
+          "col-span-1 md:col-span-2 lg:col-span-4",
+          "rounded-lg gap-0 py-0 px-4 py-2.5",
+          "flex flex-col gap-3 md:flex-row md:items-center md:gap-4"
+        )}
+      >
         <div className="flex items-center gap-2">
           <div
             className={cn(
               "w-2 h-2 rounded-full",
               agentData?.activeAgent
                 ? "bg-emerald-500 animate-pulse shadow-[0_0_6px_rgba(16,185,129,0.5)]"
-                : "bg-zinc-600"
+                : "bg-muted-foreground"
             )}
           />
           <span className="text-sm font-medium text-foreground">
@@ -146,17 +160,17 @@ export default function DashboardPage() {
             </span>
           )}
         </div>
-        <div className="ml-auto flex items-center gap-6">
+        <div className="md:ml-auto flex flex-col gap-3 md:flex-row md:items-center md:gap-6">
           {/* Health pill */}
           <Link
             href="/health"
             className={cn(
               "flex items-center gap-1.5 text-xs font-medium px-2 py-1 rounded-md border transition-colors",
               allHealthy
-                ? "border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/5"
+                ? "border-emerald-500/20 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10 dark:hover:bg-emerald-500/5"
                 : criticalCount > 0
-                ? "border-red-500/20 text-red-400 hover:bg-red-500/5"
-                : "border-amber-500/20 text-amber-400 hover:bg-amber-500/5"
+                ? "border-red-500/20 text-red-600 dark:text-red-400 hover:bg-red-500/5"
+                : "border-amber-500/20 text-amber-600 dark:text-amber-400 hover:bg-amber-500/5"
             )}
           >
             <div
@@ -168,7 +182,7 @@ export default function DashboardPage() {
             {allHealthy ? "Healthy" : criticalCount > 0 ? `${criticalCount} critical` : `${warningCount} warn`}
           </Link>
           {/* Cost tickers */}
-          <div className="flex items-center gap-4 text-right">
+          <div className="flex flex-col gap-1 md:flex-row md:items-center md:gap-4 text-right">
             <div>
               <span className="text-xs uppercase text-muted-foreground block leading-none">Today</span>
               <span className="text-sm font-mono font-bold text-foreground tabular-nums">
@@ -188,20 +202,27 @@ export default function DashboardPage() {
               </span>
             </div>
           </div>
-          <Clock />
+          <div className="flex items-center justify-between md:block">
+            <span className="text-xs text-muted-foreground md:hidden">OpenClaw Mission Control</span>
+            <Clock />
+          </div>
         </div>
-      </div>
+      </Card>
 
-      {/* Row 2: Agents (3 cols) + Pipeline doing (1 col) */}
-      <Cell title="Agents" className="col-span-3" href="/agents">
-        <div className="p-2.5 grid grid-cols-3 gap-2">
+      {/* Row 2: Agents (3 cols on desktop) */}
+      <Cell
+        title="Agents"
+        className="md:col-span-2 lg:col-span-3"
+        href="/agents"
+      >
+        <div className="p-2.5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
           {(agentData?.agents ?? []).map((agent) => (
             <div
               key={agent.name}
               className={cn(
                 "rounded-md border border-border/60 p-2.5 transition-all",
                 agent.isCurrentAgent &&
-                  "border-emerald-500/30 bg-emerald-500/5 shadow-[0_0_12px_-4px_rgba(16,185,129,0.15)]"
+                  "border-emerald-500/30 bg-emerald-500/10 dark:bg-emerald-500/5 shadow-[0_0_12px_-4px_rgba(16,185,129,0.15)]"
               )}
             >
               <div className="flex items-center justify-between mb-1">
@@ -211,7 +232,7 @@ export default function DashboardPage() {
                       "w-1.5 h-1.5 rounded-full",
                       agent.status === "active"
                         ? "bg-emerald-500 shadow-[0_0_4px_rgba(16,185,129,0.5)]"
-                        : "bg-zinc-600"
+                        : "bg-muted-foreground"
                     )}
                   />
                   <span className="text-xs font-medium text-foreground">@{agent.name}</span>
@@ -219,7 +240,7 @@ export default function DashboardPage() {
                 <span
                   className={cn(
                     "text-xs font-mono",
-                    MODEL_COLORS[agent.model] ?? "text-zinc-500"
+                    MODEL_COLORS[agent.model] ?? "text-muted-foreground"
                   )}
                 >
                   {agent.model}
@@ -230,7 +251,7 @@ export default function DashboardPage() {
                 <span>{agent.sessionCount}s</span>
               </div>
               {agent.isCurrentAgent && agent.currentNote && (
-                <p className="text-xs text-emerald-400/80 mt-1 leading-tight truncate">
+                <p className="text-xs text-emerald-600/80 dark:text-emerald-400/80 mt-1 leading-tight truncate">
                   {agent.currentNote}
                 </p>
               )}
@@ -239,9 +260,10 @@ export default function DashboardPage() {
         </div>
       </Cell>
 
+      {/* Pipeline: spans 2 rows on desktop */}
       <Cell
         title="Pipeline"
-        className="row-span-2"
+        className="lg:row-span-2"
         href="/pipeline"
         headerRight={
           <span className="text-xs text-muted-foreground">
@@ -252,7 +274,7 @@ export default function DashboardPage() {
         <div className="p-2 space-y-1.5">
           {doingCards.length > 0 && (
             <>
-              <div className="text-xs uppercase text-emerald-400/70 tracking-wider px-1 pt-1">
+              <div className="text-xs uppercase text-emerald-600/70 dark:text-emerald-400/70 tracking-wider px-1 pt-1">
                 In Progress
               </div>
               {doingCards.map((card) => {
@@ -273,7 +295,7 @@ export default function DashboardPage() {
                     </div>
                     {card.pipelineTotal > 0 && (
                       <div className="flex items-center gap-2">
-                        <div className="flex-1 h-1 bg-muted/30 rounded-full overflow-hidden">
+                        <div className="flex-1 h-1 bg-muted rounded-full overflow-hidden">
                           <div className="h-full bg-emerald-500/60 rounded-full" style={{ width: `${pct}%` }} />
                         </div>
                         <span className="text-xs text-muted-foreground font-mono">{pct}%</span>
@@ -299,7 +321,7 @@ export default function DashboardPage() {
         </div>
       </Cell>
 
-      {/* Row 3: Cron upcoming + Cron recent + Cost chart */}
+      {/* Row 3: Cron upcoming */}
       <Cell
         title="Upcoming"
         href="/cron"
@@ -314,7 +336,7 @@ export default function DashboardPage() {
             <div key={job.id} className="flex items-center gap-2 px-1 py-1 text-xs">
               <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
               <span className="text-foreground truncate flex-1">{job.name}</span>
-              <span className="text-xs text-blue-400 font-mono shrink-0">
+              <span className="text-xs text-blue-600 dark:text-blue-400 font-mono shrink-0">
                 {formatCountdown(job.state.nextRunAtMs)}
               </span>
             </div>
@@ -322,6 +344,7 @@ export default function DashboardPage() {
         </div>
       </Cell>
 
+      {/* Row 3: Cron recent */}
       <Cell title="Recent Runs" href="/cron">
         <div className="p-2 space-y-1">
           {(cronData?.recent ?? []).map((job) => (
@@ -343,6 +366,7 @@ export default function DashboardPage() {
         </div>
       </Cell>
 
+      {/* Row 3: Cost chart */}
       <Cell title="Cost Trend">
         <div className="p-2.5 flex items-end gap-px h-full">
           {(costData?.byDay ?? []).slice(-14).map((day) => {
@@ -354,7 +378,10 @@ export default function DashboardPage() {
                 className="flex-1 h-full group relative flex items-end"
               >
                 <div
-                  className="rounded-t-sm bg-violet-500/40 group-hover:bg-violet-500/70 transition-colors w-full"
+                  className={cn(
+                    "rounded-t-sm w-full transition-colors",
+                    "bg-primary/40 group-hover:bg-primary/70"
+                  )}
                   style={{ height: `${Math.max(pct, 3)}%` }}
                 />
                 <div className="absolute bottom-0 left-1/2 -translate-x-1/2 mb-1 px-1.5 py-0.5 rounded bg-popover border border-border text-xs font-mono text-foreground whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">

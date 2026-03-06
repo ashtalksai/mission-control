@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { usePolling } from "@/hooks/use-polling";
 import { POLLING_INTERVALS } from "@/lib/constants-client";
 import { cn } from "@/lib/utils";
@@ -48,23 +49,25 @@ export default function CronPage() {
   const disabledJobs = jobs.filter((j) => !j.enabled);
 
   return (
-    <div className="h-full p-3 grid grid-cols-2 grid-rows-[auto_1fr] gap-3">
+    <div className="p-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 lg:grid-rows-[auto_1fr] gap-3 lg:h-full">
       {/* Header */}
-      <div className="col-span-2 rounded-lg border border-border bg-card px-4 py-2.5 flex items-center gap-4">
-        <span className="text-sm font-medium text-foreground">Cron Jobs</span>
-        <span className="text-xs text-muted-foreground">{enabledJobs.length} active</span>
-        <span className="text-xs text-muted-foreground">{disabledJobs.length} disabled</span>
-        <span className="text-xs text-muted-foreground">{runHistory.length} recent runs</span>
-      </div>
+      <Card className="col-span-1 md:col-span-2 gap-0 rounded-lg py-0">
+        <CardContent className="px-4 py-2.5 flex items-center gap-4">
+          <span className="text-sm font-medium text-foreground">Cron Jobs</span>
+          <Badge variant="outline" className="text-xs">{enabledJobs.length} active</Badge>
+          <Badge variant="outline" className="text-xs">{disabledJobs.length} disabled</Badge>
+          <span className="text-xs text-muted-foreground">{runHistory.length} recent runs</span>
+        </CardContent>
+      </Card>
 
-      {/* Active jobs — scrollable */}
-      <div className="rounded-lg border border-border bg-card overflow-hidden flex flex-col">
-        <div className="px-3 py-2 border-b border-border/60 shrink-0 flex items-center justify-between">
-          <span className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
+      {/* Active jobs -- scrollable on desktop */}
+      <Card className="gap-0 rounded-lg py-0 overflow-hidden lg:h-full">
+        <CardHeader className="px-3 py-2 border-b border-border/60 gap-0 flex-row items-center justify-between">
+          <CardTitle className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
             Active ({enabledJobs.length})
-          </span>
-        </div>
-        <div className="flex-1 min-h-0 overflow-y-auto scrollbar-thin">
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="flex-1 min-h-0 overflow-y-auto scrollbar-thin p-0">
           {enabledJobs.map((job) => {
             const lastOk = job.state.lastRunStatus === "ok" || job.state.lastStatus === "ok";
             const hasErr = job.state.consecutiveErrors > 0;
@@ -76,14 +79,14 @@ export default function CronPage() {
                   onClick={() => setExpandedJob(isExpanded ? null : job.id)}
                   className="w-full text-left px-3 py-2.5 flex items-center gap-2.5 hover:bg-muted/10 transition-colors"
                 >
-                  <div className={cn("w-1.5 h-1.5 rounded-full shrink-0", hasErr ? "bg-red-500" : lastOk ? "bg-emerald-500" : "bg-zinc-500")} />
+                  <div className={cn("w-1.5 h-1.5 rounded-full shrink-0", hasErr ? "bg-red-600 dark:bg-red-500" : lastOk ? "bg-emerald-600 dark:bg-emerald-500" : "bg-muted")} />
                   <div className="flex-1 min-w-0">
                     <span className="text-xs font-medium text-foreground truncate block">{job.name}</span>
                     <span className="text-xs text-muted-foreground">{humanSchedule(job.schedule.expr)}</span>
                   </div>
                   <div className="flex items-center gap-3 text-xs text-muted-foreground shrink-0">
                     {job.state.lastRunAtMs > 0 && <span>{timeAgo(job.state.lastRunAtMs)}</span>}
-                    {job.state.nextRunAtMs > 0 && <span className="text-blue-400">in {timeUntil(job.state.nextRunAtMs)}</span>}
+                    {job.state.nextRunAtMs > 0 && <span className="text-blue-600 dark:text-blue-400">in {timeUntil(job.state.nextRunAtMs)}</span>}
                   </div>
                   <svg className={cn("w-3 h-3 text-muted-foreground transition-transform shrink-0", isExpanded && "rotate-180")} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -96,13 +99,13 @@ export default function CronPage() {
                       <div><span className="text-muted-foreground">Duration: </span><span className="font-mono text-foreground">{job.state.lastDurationMs > 0 ? `${(job.state.lastDurationMs / 1000).toFixed(1)}s` : "-"}</span></div>
                     </div>
                     {job.payload?.text && (
-                      <pre className="text-xs text-muted-foreground bg-muted/20 rounded p-2 overflow-x-auto max-h-16 scrollbar-thin">{job.payload.text}</pre>
+                      <pre className="text-xs text-muted-foreground bg-muted rounded p-2 overflow-x-auto max-h-16 scrollbar-thin">{job.payload.text}</pre>
                     )}
                     {runs.length > 0 && (
                       <div className="space-y-0.5 max-h-24 overflow-y-auto scrollbar-thin">
                         {runs.slice(0, 8).map((run, i) => (
                           <div key={i} className="flex items-center gap-2 text-xs py-0.5">
-                            <div className={cn("w-1 h-1 rounded-full", run.status === "ok" ? "bg-emerald-500" : "bg-red-500")} />
+                            <div className={cn("w-1 h-1 rounded-full", run.status === "ok" ? "bg-emerald-600 dark:bg-emerald-500" : "bg-red-600 dark:bg-red-500")} />
                             <span className="font-mono text-muted-foreground">{new Date(run.ts).toLocaleTimeString()}</span>
                             <span className="text-foreground truncate flex-1">{run.summary}</span>
                           </div>
@@ -114,20 +117,20 @@ export default function CronPage() {
               </div>
             );
           })}
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
-      {/* Disabled jobs — scrollable */}
-      <div className="rounded-lg border border-border bg-card overflow-hidden flex flex-col">
-        <div className="px-3 py-2 border-b border-border/60 shrink-0">
-          <span className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
+      {/* Disabled jobs -- scrollable on desktop */}
+      <Card className="gap-0 rounded-lg py-0 overflow-hidden lg:h-full">
+        <CardHeader className="px-3 py-2 border-b border-border/60 gap-0">
+          <CardTitle className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
             Disabled ({disabledJobs.length})
-          </span>
-        </div>
-        <div className="flex-1 min-h-0 overflow-y-auto scrollbar-thin">
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="flex-1 min-h-0 overflow-y-auto scrollbar-thin p-0">
           {disabledJobs.map((job) => (
             <div key={job.id} className="border-b border-border/30 px-3 py-2.5 flex items-center gap-2.5 opacity-50">
-              <div className="w-1.5 h-1.5 rounded-full bg-zinc-600 shrink-0" />
+              <div className="w-1.5 h-1.5 rounded-full bg-muted shrink-0" />
               <div className="flex-1 min-w-0">
                 <span className="text-xs text-foreground truncate block">{job.name}</span>
                 <span className="text-xs text-muted-foreground">{humanSchedule(job.schedule.expr)}</span>
@@ -138,8 +141,8 @@ export default function CronPage() {
           {disabledJobs.length === 0 && (
             <p className="text-xs text-muted-foreground text-center py-6">None disabled</p>
           )}
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

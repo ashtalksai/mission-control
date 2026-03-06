@@ -2,6 +2,7 @@
 
 import { DailyChart, DonutChart } from "@/components/costs/cost-charts";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { usePolling } from "@/hooks/use-polling";
 import { POLLING_INTERVALS } from "@/lib/constants-client";
 import { cn } from "@/lib/utils";
@@ -32,47 +33,59 @@ export default function CostsPage() {
   const arrow = (key: SortKey) => (sortKey === key ? (sortAsc ? " \u2191" : " \u2193") : "");
 
   return (
-    <div className="h-full p-3 grid grid-cols-4 grid-rows-[auto_1fr_1fr] gap-3">
+    <div className="p-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 lg:grid-rows-[auto_1fr_1fr] gap-3 lg:h-full">
       {/* Row 1: Stat cards */}
-      <div className="rounded-lg border border-border bg-card px-4 py-3">
-        <span className="text-xs uppercase text-muted-foreground block">Today</span>
-        <span className="text-xl font-mono font-bold text-foreground tabular-nums">${(data?.totalToday ?? 0).toFixed(2)}</span>
-      </div>
-      <div className="rounded-lg border border-border bg-card px-4 py-3">
-        <span className="text-xs uppercase text-muted-foreground block">This Week</span>
-        <span className="text-xl font-mono font-bold text-foreground tabular-nums">${(data?.totalWeek ?? 0).toFixed(2)}</span>
-      </div>
-      <div className="rounded-lg border border-border bg-card px-4 py-3">
-        <span className="text-xs uppercase text-muted-foreground block">This Month</span>
-        <span className="text-xl font-mono font-bold text-foreground tabular-nums">${(data?.totalMonth ?? 0).toFixed(2)}</span>
-      </div>
-      <div className="rounded-lg border border-border bg-card px-4 py-3">
-        <span className="text-xs uppercase text-muted-foreground block">Entries</span>
-        <span className="text-xl font-mono font-bold text-foreground tabular-nums">{data?.entries.length ?? 0}</span>
-      </div>
+      <Card className="gap-0 rounded-lg py-0">
+        <CardContent className="px-4 py-3">
+          <span className="text-xs uppercase text-muted-foreground block">Today</span>
+          <span className="text-xl font-mono font-bold text-foreground tabular-nums">${(data?.totalToday ?? 0).toFixed(2)}</span>
+        </CardContent>
+      </Card>
+      <Card className="gap-0 rounded-lg py-0">
+        <CardContent className="px-4 py-3">
+          <span className="text-xs uppercase text-muted-foreground block">This Week</span>
+          <span className="text-xl font-mono font-bold text-foreground tabular-nums">${(data?.totalWeek ?? 0).toFixed(2)}</span>
+        </CardContent>
+      </Card>
+      <Card className="gap-0 rounded-lg py-0">
+        <CardContent className="px-4 py-3">
+          <span className="text-xs uppercase text-muted-foreground block">This Month</span>
+          <span className="text-xl font-mono font-bold text-foreground tabular-nums">${(data?.totalMonth ?? 0).toFixed(2)}</span>
+        </CardContent>
+      </Card>
+      <Card className="gap-0 rounded-lg py-0">
+        <CardContent className="px-4 py-3">
+          <span className="text-xs uppercase text-muted-foreground block">Entries</span>
+          <span className="text-xl font-mono font-bold text-foreground tabular-nums">{data?.entries.length ?? 0}</span>
+        </CardContent>
+      </Card>
 
       {/* Row 2: Daily chart (3 cols) + By Agent donut (1 col) */}
-      <div className="col-span-3 rounded-lg border border-border bg-card overflow-hidden flex flex-col">
-        <div className="px-3 py-2 border-b border-border/60 shrink-0">
-          <span className="text-xs uppercase tracking-wider text-muted-foreground font-medium">Daily Spend (30d)</span>
-        </div>
-        <div className="flex-1 min-h-0 p-2">
+      <Card className="col-span-1 lg:col-span-3 gap-0 rounded-lg py-0 overflow-hidden lg:h-full">
+        <CardHeader className="px-3 py-2 border-b border-border/60 gap-0">
+          <CardTitle className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
+            Daily Spend (30d)
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="flex-1 min-h-0 p-2">
           <DailyChart data={data?.byDay ?? []} />
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
-      <div className="rounded-lg border border-border bg-card overflow-hidden flex flex-col">
-        <div className="flex-1 min-h-0 p-2">
+      <Card className="gap-0 rounded-lg py-0 overflow-hidden lg:h-full">
+        <CardContent className="flex-1 min-h-0 p-2">
           <DonutChart title="By Agent" data={(data?.byAgent ?? []).map((a) => ({ name: `@${a.agent}`, value: a.cost }))} />
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Row 3: Cost log (3 cols) + By Model donut (1 col) */}
-      <div className="col-span-3 rounded-lg border border-border bg-card overflow-hidden flex flex-col">
-        <div className="px-3 py-2 border-b border-border/60 shrink-0">
-          <span className="text-xs uppercase tracking-wider text-muted-foreground font-medium">Cost Log</span>
-        </div>
-        <div className="flex-1 min-h-0 overflow-y-auto scrollbar-thin">
+      <Card className="col-span-1 lg:col-span-3 gap-0 rounded-lg py-0 overflow-hidden lg:h-full">
+        <CardHeader className="px-3 py-2 border-b border-border/60 gap-0">
+          <CardTitle className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
+            Cost Log
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="flex-1 min-h-0 overflow-y-auto scrollbar-thin p-0">
           {/* Table header */}
           <div className="sticky top-0 bg-card border-b border-border/40 px-3 py-1.5 flex items-center text-xs uppercase tracking-wider text-muted-foreground font-medium">
             <button className="w-28 text-left" onClick={() => toggleSort("timestamp")}>Time{arrow("timestamp")}</button>
@@ -96,14 +109,14 @@ export default function CostsPage() {
               </span>
             </div>
           ))}
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
-      <div className="rounded-lg border border-border bg-card overflow-hidden flex flex-col">
-        <div className="flex-1 min-h-0 p-2">
+      <Card className="gap-0 rounded-lg py-0 overflow-hidden lg:h-full">
+        <CardContent className="flex-1 min-h-0 p-2">
           <DonutChart title="By Model" data={(data?.byModel ?? []).map((m) => ({ name: m.model, value: m.cost }))} />
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

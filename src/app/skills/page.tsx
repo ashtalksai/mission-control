@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import { usePolling } from "@/hooks/use-polling";
 import { POLLING_INTERVALS } from "@/lib/constants-client";
 import { cn } from "@/lib/utils";
@@ -42,47 +43,49 @@ export default function SkillsPage() {
   });
 
   return (
-    <div className="h-full p-3 grid grid-rows-[auto_1fr] gap-3">
+    <div className="p-3 grid grid-rows-[auto_1fr] gap-3 lg:h-full">
       {/* Filter bar */}
-      <div className="rounded-lg border border-border bg-card px-4 py-2.5 flex items-center gap-4">
-        <span className="text-sm font-medium text-foreground">Skills</span>
-        <span className="text-xs text-muted-foreground">{filtered.length}/{skills?.length ?? 0}</span>
-        <div className="flex items-center gap-1.5 ml-2">
-          <button
-            onClick={() => setCategory(null)}
-            className={cn(
-              "text-xs px-2 py-1 rounded-md transition-colors",
-              category === null ? "bg-accent text-accent-foreground font-medium" : "text-muted-foreground hover:text-foreground"
-            )}
-          >
-            All
-          </button>
-          {categorized.map(([cat, count]) => (
+      <Card className="gap-0 py-0 rounded-lg">
+        <CardContent className="px-4 py-2.5 flex items-center gap-4">
+          <span className="text-sm font-medium text-foreground">Skills</span>
+          <span className="text-xs text-muted-foreground">{filtered.length}/{skills?.length ?? 0}</span>
+          <div className="flex items-center gap-1.5 ml-2">
             <button
-              key={cat}
-              onClick={() => setCategory(category === cat ? null : cat)}
+              onClick={() => setCategory(null)}
               className={cn(
-                "text-xs px-2 py-1 rounded-md transition-colors flex items-center gap-1",
-                category === cat ? "bg-accent text-accent-foreground font-medium" : "text-muted-foreground hover:text-foreground"
+                "text-xs px-2 py-1 rounded-md transition-colors",
+                category === null ? "bg-accent text-accent-foreground font-medium" : "text-muted-foreground hover:text-foreground"
               )}
             >
-              {cat} <span className="opacity-50">{count}</span>
+              All
             </button>
-          ))}
-        </div>
-        <input
-          type="text"
-          placeholder="Search..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="ml-auto h-7 w-44 rounded-md border border-border bg-muted/50 px-2.5 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
-        />
-      </div>
+            {categorized.map(([cat, count]) => (
+              <button
+                key={cat}
+                onClick={() => setCategory(category === cat ? null : cat)}
+                className={cn(
+                  "text-xs px-2 py-1 rounded-md transition-colors flex items-center gap-1",
+                  category === cat ? "bg-accent text-accent-foreground font-medium" : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                {cat} <span className="opacity-50">{count}</span>
+              </button>
+            ))}
+          </div>
+          <input
+            type="text"
+            placeholder="Search..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="ml-auto h-7 w-44 rounded-md border border-border bg-muted/50 px-2.5 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+          />
+        </CardContent>
+      </Card>
 
       {/* Scrollable skill grid */}
-      <div className="rounded-lg border border-border bg-card overflow-hidden">
-        <div className="h-full overflow-y-auto scrollbar-thin p-3">
-          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5">
+      <Card className="gap-0 py-0 rounded-lg overflow-hidden">
+        <CardContent className="px-3 py-3 lg:h-full lg:overflow-y-auto scrollbar-thin">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5">
             {filtered.map((skill) => (
               <Link key={skill.name} href={`/skills/${encodeURIComponent(skill.name)}`}>
                 <div className="rounded-md border border-border/50 p-3 hover:border-foreground/20 transition-colors cursor-pointer h-full">
@@ -94,9 +97,9 @@ export default function SkillsPage() {
                     {skill.description || skill.contentPreview}
                   </p>
                   <div className="mt-2">
-                    <span className="text-xs text-muted-foreground/50 bg-muted/30 px-1 rounded">
+                    <Badge variant="secondary" className="text-xs px-1 py-0 h-4 font-normal text-muted-foreground">
                       {categorize(skill.name)}
-                    </span>
+                    </Badge>
                   </div>
                 </div>
               </Link>
@@ -105,8 +108,8 @@ export default function SkillsPage() {
           {filtered.length === 0 && (
             <p className="text-xs text-muted-foreground text-center py-8">No skills match</p>
           )}
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

@@ -2,7 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const NAV_ITEMS = [
   { href: "/", label: "Dashboard", icon: "grid" },
@@ -62,50 +66,89 @@ const ICONS: Record<string, React.ReactNode> = {
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
     </svg>
   ),
-  server: (
-    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
-    </svg>
-  ),
 };
 
-export function Sidebar() {
+function NavContent({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
 
   return (
-    <aside className="w-56 border-r border-border bg-card flex flex-col shrink-0">
-      <div className="p-4 border-b border-border">
-        <h1 className="text-sm font-bold tracking-wider uppercase text-foreground">
-          Mission Control
-        </h1>
-        <p className="text-xs text-muted-foreground mt-0.5">Agent Monitoring</p>
+    <nav className="flex-1 p-2 space-y-0.5">
+      {NAV_ITEMS.map((item) => {
+        const isActive =
+          item.href === "/"
+            ? pathname === "/"
+            : pathname.startsWith(item.href);
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            onClick={onNavigate}
+            className={cn(
+              "flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-colors",
+              isActive
+                ? "bg-accent text-accent-foreground font-medium"
+                : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+            )}
+          >
+            {ICONS[item.icon]}
+            {item.label}
+          </Link>
+        );
+      })}
+    </nav>
+  );
+}
+
+export function Sidebar() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      {/* Mobile header bar */}
+      <div className="md:hidden fixed top-0 left-0 right-0 z-50 h-12 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex items-center px-3 gap-3">
+        <Sheet open={open} onOpenChange={setOpen}>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon" className="h-8 w-8">
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="w-56 p-0">
+            <SheetTitle className="sr-only">Navigation</SheetTitle>
+            <div className="p-4 border-b border-border">
+              <h1 className="text-sm font-bold tracking-wider uppercase text-foreground">
+                🦞🚀 Mission Control
+              </h1>
+              <p className="text-xs text-muted-foreground mt-0.5">OpenClaw Agent Monitoring</p>
+            </div>
+            <NavContent onNavigate={() => setOpen(false)} />
+            <div className="p-3 border-t border-border flex items-center justify-between">
+              <p className="text-[10px] text-muted-foreground">OpenClaw v1</p>
+              <ThemeToggle />
+            </div>
+          </SheetContent>
+        </Sheet>
+        <span className="text-sm font-bold tracking-wider uppercase text-foreground">🦞🚀 Mission Control</span>
+        <div className="ml-auto">
+          <ThemeToggle />
+        </div>
       </div>
-      <nav className="flex-1 p-2 space-y-0.5">
-        {NAV_ITEMS.map((item) => {
-          const isActive =
-            item.href === "/"
-              ? pathname === "/"
-              : pathname.startsWith(item.href);
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-colors",
-                isActive
-                  ? "bg-accent text-accent-foreground font-medium"
-                  : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
-              )}
-            >
-              {ICONS[item.icon]}
-              {item.label}
-            </Link>
-          );
-        })}
-      </nav>
-      <div className="p-3 border-t border-border">
-        <p className="text-[10px] text-muted-foreground">OpenClaw v1</p>
-      </div>
-    </aside>
+
+      {/* Desktop sidebar */}
+      <aside className="hidden md:flex w-56 border-r border-border bg-card flex-col shrink-0">
+        <div className="p-4 border-b border-border">
+          <h1 className="text-sm font-bold tracking-wider uppercase text-foreground">
+            🦞🚀 Mission Control
+          </h1>
+          <p className="text-xs text-muted-foreground mt-0.5">OpenClaw Agent Monitoring</p>
+        </div>
+        <NavContent />
+        <div className="p-3 border-t border-border flex items-center justify-between">
+          <p className="text-[10px] text-muted-foreground">OpenClaw v1</p>
+          <ThemeToggle />
+        </div>
+      </aside>
+    </>
   );
 }
