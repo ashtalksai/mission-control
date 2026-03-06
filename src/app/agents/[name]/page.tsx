@@ -149,7 +149,7 @@ export default function AgentDetailPage({
             <div className="mt-3 flex items-center gap-4 text-xs text-muted-foreground">
               <span>Sessions: {agentStatus?.sessionCount ?? 0}</span>
               <span>Instructions: {profile.lineCount} lines</span>
-              <span className="font-mono text-[10px]">{profile.instructionsPath}</span>
+              <span className="font-mono text-xs">{profile.instructionsPath}</span>
             </div>
           </CardContent>
         </Card>
@@ -158,7 +158,7 @@ export default function AgentDetailPage({
           {/* Pipeline Stages */}
           <Card>
             <CardContent className="p-5">
-              <h3 className="text-[10px] uppercase tracking-wider text-muted-foreground mb-3 font-medium">
+              <h3 className="text-xs uppercase tracking-wider text-muted-foreground mb-3 font-medium">
                 Pipeline Stages
               </h3>
               <div className="flex flex-wrap gap-1.5">
@@ -174,7 +174,7 @@ export default function AgentDetailPage({
                           : "bg-muted/30 border-border text-muted-foreground/50"
                       )}
                     >
-                      <span className="font-mono text-[10px] opacity-60">{stage.num}</span>
+                      <span className="font-mono text-xs opacity-60">{stage.num}</span>
                       <span>{stage.name}</span>
                     </div>
                   );
@@ -186,7 +186,7 @@ export default function AgentDetailPage({
           {/* Skills */}
           <Card>
             <CardContent className="p-5">
-              <h3 className="text-[10px] uppercase tracking-wider text-muted-foreground mb-3 font-medium">
+              <h3 className="text-xs uppercase tracking-wider text-muted-foreground mb-3 font-medium">
                 Skills ({profile.skills.length})
               </h3>
               {profile.skills.length > 0 ? (
@@ -213,7 +213,7 @@ export default function AgentDetailPage({
         <Card>
           <CardContent className="p-5">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">
+              <h3 className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
                 Instructions (AGENTS.md)
               </h3>
               <button

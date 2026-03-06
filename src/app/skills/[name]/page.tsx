@@ -57,13 +57,13 @@ export default function SkillDetailPage({
                 {skill.lineCount} lines
               </Badge>
             </div>
-            <p className="text-[10px] text-muted-foreground font-mono">{skill.path}</p>
+            <p className="text-xs text-muted-foreground font-mono">{skill.path}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardContent className="p-5">
-            <h3 className="text-[10px] uppercase tracking-wider text-muted-foreground mb-3 font-medium">
+            <h3 className="text-xs uppercase tracking-wider text-muted-foreground mb-3 font-medium">
               Skill Content
             </h3>
             <div className="prose prose-invert prose-sm max-w-none max-h-[700px] overflow-auto rounded-md bg-muted/30 p-4 border border-border">

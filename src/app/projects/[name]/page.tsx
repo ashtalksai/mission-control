@@ -53,7 +53,7 @@ function Section({ title, children, count }: { title: string; children: React.Re
   return (
     <Card>
       <CardContent className="p-4">
-        <h3 className="text-[10px] uppercase tracking-wider text-muted-foreground mb-3 font-medium">
+        <h3 className="text-xs uppercase tracking-wider text-muted-foreground mb-3 font-medium">
           {title} {count !== undefined && <span className="text-muted-foreground/60">({count})</span>}
         </h3>
         {children}
@@ -118,7 +118,7 @@ export default function ProjectDetailPage({
               </Badge>
             </div>
             <div className="flex items-center flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
-              <span className="font-mono text-[10px]">{project.path}</span>
+              <span className="font-mono text-xs">{project.path}</span>
               <span>Modified {timeAgo(project.lastModified)}</span>
               <span>{project.size}</span>
               {project.hasGit && project.gitBranch && (
@@ -204,7 +204,7 @@ export default function ProjectDetailPage({
                   <Badge
                     key={pkg}
                     variant="outline"
-                    className="text-[10px] px-1.5 py-0 h-5 border font-mono"
+                    className="text-xs px-1.5 py-0 h-5 border font-mono"
                     title={`${pkg}@${ver}`}
                   >
                     {pkg} <span className="text-muted-foreground ml-0.5">{ver}</span>
@@ -224,7 +224,7 @@ export default function ProjectDetailPage({
                   <Badge
                     key={pkg}
                     variant="secondary"
-                    className="text-[10px] px-1.5 py-0 h-5 font-mono"
+                    className="text-xs px-1.5 py-0 h-5 font-mono"
                     title={`${pkg}@${ver}`}
                   >
                     {pkg} <span className="opacity-60 ml-0.5">{ver}</span>
@@ -241,7 +241,7 @@ export default function ProjectDetailPage({
         <Section title="Project Structure">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <h4 className="text-[10px] text-muted-foreground mb-2 uppercase tracking-wider">Directories</h4>
+              <h4 className="text-xs text-muted-foreground mb-2 uppercase tracking-wider">Directories</h4>
               <div className="space-y-0.5">
                 {project.topLevelDirs.map((dir) => (
                   <div key={dir} className="flex items-center gap-1.5 text-xs text-foreground">
@@ -254,7 +254,7 @@ export default function ProjectDetailPage({
               </div>
             </div>
             <div>
-              <h4 className="text-[10px] text-muted-foreground mb-2 uppercase tracking-wider">Files</h4>
+              <h4 className="text-xs text-muted-foreground mb-2 uppercase tracking-wider">Files</h4>
               <div className="space-y-0.5">
                 {project.topLevelFiles.map((file) => (
                   <div key={file} className="flex items-center gap-1.5 text-xs text-muted-foreground font-mono">
@@ -272,7 +272,7 @@ export default function ProjectDetailPage({
         {/* Env Example */}
         {project.envExample && (
           <Section title="Environment Variables (.env.example)">
-            <pre className="text-[10px] font-mono text-muted-foreground bg-muted/30 rounded p-3 overflow-auto max-h-48 whitespace-pre-wrap">
+            <pre className="text-xs font-mono text-muted-foreground bg-muted/30 rounded p-3 overflow-auto max-h-48 whitespace-pre-wrap">
               {project.envExample}
             </pre>
           </Section>

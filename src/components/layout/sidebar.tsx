@@ -12,9 +12,8 @@ const NAV_ITEMS = [
   { href: "/skills", label: "Skills", icon: "book" },
   { href: "/costs", label: "Costs", icon: "dollar" },
   { href: "/cron", label: "Cron", icon: "clock" },
-  { href: "/server", label: "Server", icon: "server" },
-  { href: "/logs", label: "Logs", icon: "terminal" },
   { href: "/health", label: "Health", icon: "heart" },
+  { href: "/logs", label: "Logs", icon: "terminal" },
 ];
 
 const ICONS: Record<string, React.ReactNode> = {
@@ -79,7 +78,7 @@ export function Sidebar() {
         <h1 className="text-sm font-bold tracking-wider uppercase text-foreground">
           Mission Control
         </h1>
-        <p className="text-[10px] text-muted-foreground mt-0.5">Agent Monitoring</p>
+        <p className="text-xs text-muted-foreground mt-0.5">Agent Monitoring</p>
       </div>
       <nav className="flex-1 p-2 space-y-0.5">
         {NAV_ITEMS.map((item) => {

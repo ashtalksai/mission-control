@@ -193,6 +193,11 @@ export interface ServerHealth {
     available: number;
     usagePercent: number;
   };
+  cpu: {
+    usagePercent: number;
+    cores: number;
+    loadAvg: string;
+  };
   containers: {
     total: number;
     running: number;

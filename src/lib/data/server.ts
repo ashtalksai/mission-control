@@ -21,6 +21,11 @@ export interface ServerHealth {
     available: number;
     usagePercent: number;
   };
+  cpu: {
+    usagePercent: number;
+    cores: number;
+    loadAvg: string;
+  };
   containers: {
     total: number;
     running: number;
@@ -102,6 +107,21 @@ function parseContainers(): ServerHealth["containers"] {
   };
 }
 
+function parseCpu(): ServerHealth["cpu"] {
+  try {
+    const cores = parseInt(ssh("nproc"), 10) || 1;
+    const loadLine = ssh("cat /proc/loadavg");
+    const loadParts = loadLine.split(/\s+/);
+    const loadAvg = loadParts.slice(0, 3).join(", ");
+    // Derive usage from 1-min load avg vs cores
+    const load1m = parseFloat(loadParts[0]) || 0;
+    const usagePercent = Math.min(100, Math.round((load1m / cores) * 100));
+    return { usagePercent, cores, loadAvg };
+  } catch {
+    return { usagePercent: 0, cores: 0, loadAvg: "N/A" };
+  }
+}
+
 function parseUptime(): string {
   try {
     return ssh("uptime -p");
@@ -119,6 +139,7 @@ export async function getServerHealth(): Promise<ServerHealth> {
     const data: ServerHealth = {
       disk: parseDisk(),
       memory: parseMemory(),
+      cpu: parseCpu(),
       containers: parseContainers(),
       uptime: parseUptime(),
       lastChecked: new Date().toISOString(),
