@@ -130,3 +130,95 @@ export interface HealthCheck {
   message: string;
   lastChecked: string;
 }
+
+export interface PipelineCard {
+  id: string;
+  name: string;
+  list: string;
+  labels: string[];
+  agentLabel: string | null;
+  lastActivity: string;
+  pipelineTotal: number;
+  pipelineDone: number;
+  currentStage: string | null;
+  url: string;
+}
+
+export interface PipelineResponse {
+  doing: PipelineCard[];
+  backlog: PipelineCard[];
+  review: PipelineCard[];
+  done: PipelineCard[];
+  totalCards: number;
+}
+
+export interface Project {
+  name: string;
+  path: string;
+  hasPackageJson: boolean;
+  description: string;
+  hasGit: boolean;
+  lastModified: string;
+  deployUrl: string | null;
+  healthStatus: "healthy" | "unhealthy" | "unknown";
+  framework: string;
+  size: string;
+}
+
+export interface ProjectsResponse {
+  projects: Project[];
+  totalCount: number;
+  deployedCount: number;
+  frameworkBreakdown: Record<string, number>;
+}
+
+export interface ContainerInfo {
+  name: string;
+  image: string;
+  status: string;
+  memory: string;
+  uptime: string;
+}
+
+export interface ServerHealth {
+  disk: {
+    total: string;
+    used: string;
+    available: string;
+    usagePercent: number;
+  };
+  memory: {
+    total: number;
+    used: number;
+    available: number;
+    usagePercent: number;
+  };
+  containers: {
+    total: number;
+    running: number;
+    list: ContainerInfo[];
+  };
+  uptime: string;
+  lastChecked: string;
+  error?: string;
+}
+
+export interface HourlyRateLimit {
+  hour: string;
+  count: number;
+}
+
+export interface ErrorType {
+  type: string;
+  count: number;
+  lastSeen: string;
+}
+
+export interface RateLimitResponse {
+  totalRateLimits: number;
+  todayRateLimits: number;
+  hourlyTrend: HourlyRateLimit[];
+  errorBreakdown: ErrorType[];
+  recentErrors: { timestamp: string; message: string; type: string }[];
+  lastChecked: string;
+}

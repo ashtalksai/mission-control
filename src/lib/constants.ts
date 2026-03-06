@@ -14,6 +14,7 @@ export const AGENT_NAMES = [
   "main",
   "coder",
   "codex",
+  "strategist",
   "designer",
   "artist",
   "marketer",
@@ -25,13 +26,14 @@ export const AGENT_NAMES = [
 
 export const AGENT_MODELS: Record<string, string> = {
   main: "opus",
-  coder: "haiku",
+  coder: "opus",
   codex: "codex",
+  strategist: "sonnet",
   designer: "sonnet",
   artist: "sonnet",
-  marketer: "haiku",
+  marketer: "claude-sonnet-4-6",
   planner: "sonnet",
-  tester: "haiku",
+  tester: "sonnet",
   ops: "haiku",
   "claude-code": "opus",
 };

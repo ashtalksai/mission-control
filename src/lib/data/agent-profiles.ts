@@ -20,10 +20,11 @@ interface AgentProfile {
 
 // Agent metadata from the main AGENTS.md table
 const AGENT_META: Record<string, { label: string; stages: string; model: string; role: string }> = {
-  main: { label: "(direct)", stages: "11, 15", model: "Opus 4.6", role: "Traffic control — dispatches agents, presents results to Ash" },
+  main: { label: "(direct)", stages: "15", model: "Opus 4.6", role: "Traffic control — dispatches agents, re-assigns after Ash GO" },
   planner: { label: "@planner", stages: "1-2", model: "Sonnet 4.6", role: "Research and planning — market analysis, competition, strategy" },
+  strategist: { label: "@strategist", stages: "2b", model: "Sonnet 4.6", role: "Product enrichment — detailed specs, page content, core product definition, differentiators" },
   designer: { label: "@designer", stages: "3", model: "Sonnet 4.6", role: "Design specs — UI/UX mockups, design system, brand identity" },
-  coder: { label: "@coder", stages: "4, 6, 8b, 8c", model: "Opus 4.6", role: "Build full MVPs — Next.js/React Native, deploy to Coolify" },
+  coder: { label: "@coder", stages: "4, 6, 8b, 8c", model: "Opus 4.6", role: "Build full MVPs — Next.js/React Native, deploy to Coolify, populate /deck and /docs" },
   tester: { label: "@tester", stages: "5", model: "Sonnet 4.6", role: "QA — functional testing, scoring, bug reporting" },
   ops: { label: "@ops", stages: "7", model: "Haiku 4.5", role: "Verify deployments — health checks, DNS, SSL" },
   marketer: { label: "@marketer", stages: "8, 10, 12-14", model: "Sonnet 4.6", role: "GTM strategy, marketing plans, distribution, growth" },
@@ -78,7 +79,7 @@ export async function getAgentProfile(name: string): Promise<AgentProfile | null
 }
 
 export async function getAllAgentProfiles(): Promise<AgentProfile[]> {
-  const names = ["main", "planner", "designer", "coder", "tester", "ops", "marketer", "artist"];
+  const names = ["main", "planner", "strategist", "designer", "coder", "tester", "ops", "marketer", "artist"];
   const profiles = await Promise.all(names.map(getAgentProfile));
   return profiles.filter((p): p is AgentProfile => p !== null);
 }

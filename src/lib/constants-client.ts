@@ -6,4 +6,8 @@ export const POLLING_INTERVALS = {
   health: 60_000,
   skills: 300_000,
   agentProfiles: 60_000,
+  pipeline: 60_000,
+  projects: 300_000,
+  server: 120_000,
+  ratelimits: 60_000,
 } as const;
