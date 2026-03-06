@@ -2,7 +2,7 @@
 
 Real-time monitoring dashboard for autonomous AI agent systems. Built for [OpenClaw](https://github.com/openclaw/openclaw) — tracks agents, costs, pipelines, cron jobs, server health, and more.
 
-![Dashboard](public/screenshots/dashboard.png)
+![Dashboard](public/screenshots/dashboard-dark.png)
 
 ## What It Does
 
@@ -18,7 +18,7 @@ Mission Control gives you a single pane of glass over an AI agent fleet:
 - **Agent Profiles** — Deep dive into each agent's role, instructions, pipeline stages, and skills
 - **Logs** — Unified timeline of gateway events and cron run history
 
-![Health](public/screenshots/health.png)
+![Health](public/screenshots/mobile-dashboard.png)
 
 ## Features
 
